@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
-# Factory Droid Portable Config - Installation Script
-# Automatically installs TTS, hooks, and personal instructions
+# Factory Droid Portable Config - Local Installation Script
+# Run this after cloning the repo
 #
 # Usage: ./install.sh [--dry-run]
 #
@@ -31,12 +31,23 @@ FACTORY_DIR="${HOME}/.factory"
 echo -e "${BLUE}🤖 Factory Droid Portable Config Installer${NC}"
 echo ""
 
+# Detect OS
+detect_os() {
+    case "$(uname -s)" in
+        Darwin*)    echo "macos" ;;
+        Linux*)     echo "linux" ;;
+        *)          echo "unknown" ;;
+    esac
+}
+
+OS=$(detect_os)
+
 # Check dependencies
 echo -e "${YELLOW}Checking dependencies...${NC}"
 
 check_command() {
     if command -v "$1" &> /dev/null; then
-        echo -e "  ${GREEN}✓${NC} $1 installed"
+        echo -e "  ${GREEN}✓${NC} $1 installed ($(command -v $1))"
         return 0
     else
         echo -e "  ${YELLOW}✗${NC} $1 NOT installed"
@@ -49,27 +60,49 @@ check_command node || DEPS_OK=false
 check_command ffmpeg || DEPS_OK=false
 check_command droid || DEPS_OK=false
 
+# Check uv (optional, for AWS MCPs)
+if check_command uv; then
+    :
+else
+    echo -e "  ${BLUE}ℹ${NC} uv not installed (optional, for AWS MCPs)"
+fi
+
 if [[ "$DEPS_OK" == "false" ]]; then
     echo ""
-    echo "❌ Missing dependencies. Please install them first:"
+    echo "❌ Missing required dependencies. Please install them first:"
     echo "   - Node.js: https://nodejs.org"
-    echo "   - ffmpeg: brew install ffmpeg"
+    if [[ "$OS" == "macos" ]]; then
+        echo "   - ffmpeg: brew install ffmpeg"
+    else
+        echo "   - ffmpeg: sudo apt install ffmpeg"
+    fi
     echo "   - Factory CLI: npm install -g @factory/cli"
+    echo ""
+    echo "Optional for AWS MCPs:"
+    echo "   - uv: curl -LsSf https://astral.sh/uv/install.sh | sh"
     exit 1
 fi
 
 echo ""
 
-# Install edge-tts-universal if not present
-if [[ ! -d "${FACTORY_DIR}/node_modules/edge-tts-universal" ]]; then
-    echo -e "${YELLOW}Installing edge-tts-universal...${NC}"
-    if [[ "$DRY_RUN" == "false" ]]; then
-        cd "$FACTORY_DIR"
-        npm install edge-tts-universal --save 2>/dev/null || true
+# Install edge-tts-universal
+echo -e "${YELLOW}Installing TTS engine (edge-tts-universal)...${NC}"
+if [[ "$DRY_RUN" == "false" ]]; then
+    mkdir -p "${FACTORY_DIR}"
+    cd "$FACTORY_DIR"
+    if [[ ! -f "package.json" ]]; then
+        npm init -y 2>/dev/null || true
+    fi
+    if [[ ! -d "node_modules/edge-tts-universal" ]]; then
+        npm install edge-tts-universal --save 2>/dev/null
+        echo -e "  ${GREEN}✓${NC} edge-tts-universal installed"
+    else
+        echo -e "  ${GREEN}✓${NC} edge-tts-universal already installed"
     fi
 fi
 
 # Copy files
+echo ""
 echo -e "${YELLOW}Installing files...${NC}"
 
 install_file() {
@@ -101,21 +134,36 @@ install_file "${SCRIPT_DIR}/bin/tts-speak" "${FACTORY_DIR}/bin/tts-speak" "TTS s
 # Install voice scenarios config
 install_file "${SCRIPT_DIR}/config/droid-voice-scenarios.json" "${FACTORY_DIR}/config/droid-voice-scenarios.json" "Voice scenarios config"
 
+# Setup MCP config
+if [[ "$DRY_RUN" == "false" ]]; then
+    if [[ ! -f "${FACTORY_DIR}/mcp.json" ]]; then
+        cp "${SCRIPT_DIR}/mcp-servers.example.json" "${FACTORY_DIR}/mcp.json"
+        echo -e "  ${GREEN}✓${NC} Created mcp.json from template"
+    else
+        echo -e "  ${BLUE}ℹ${NC} mcp.json already exists, keeping it"
+    fi
+fi
+
 echo ""
 
 if [[ "$DRY_RUN" == "false" ]]; then
+    # Test TTS
+    echo -e "${YELLOW}Testing TTS...${NC}"
+    "${FACTORY_DIR}/hooks/droid-speak.sh" "Instalación completada" &
+    sleep 1
+    
+    echo ""
     echo -e "${GREEN}✅ Installation complete!${NC}"
     echo ""
-    echo "Next steps:"
-    echo "  1. Restart any active Droid sessions"
-    echo "  2. Test TTS: ${FACTORY_DIR}/hooks/droid-speak.sh 'Hola mundo'"
+    echo -e "${YELLOW}Next steps:${NC}"
+    echo "  1. Add your API keys to ~/.factory/mcp.json:"
+    echo "     - Context7: https://context7.com"
+    echo "     - GitHub:   https://github.com/settings/tokens"
     echo ""
-    echo "Installed components:"
-    echo "  • AGENTS.md - Personal instructions for all Droid sessions"
-    echo "  • droid-speak.sh - Voice synthesis for task completions"
-    echo "  • mcp-keyword-detector.py - Auto-invoke MCP tools by keywords"
-    echo "  • tts-speak - Edge TTS binary for text-to-speech"
-    echo "  • droid-voice-scenarios.json - Voice profiles by scenario"
+    echo "  2. Restart any active Droid sessions"
+    echo ""
+    echo "  3. Test the setup:"
+    echo "     ~/.factory/hooks/droid-speak.sh 'Hola mundo'"
 else
     echo -e "${BLUE}Dry run complete. Run without --dry-run to install.${NC}"
 fi
