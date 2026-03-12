@@ -1,0 +1,82 @@
+{
+  "scenarios": {
+    "software_development": {
+      "keywords": ["create", "edit", "refactor", "implement", "build", "write", "update", "delete"],
+      "voice": "es-MX-JorgeNeural",
+      "messages": {
+        "start": "Entendido. Comenzaré con el desarrollo de software.",
+        "success": "Listo. Completé la implementación de {task}.",
+        "error": "Hubo un error en el desarrollo. Necesitas que lo intente de nuevo?"
+      }
+    },
+    "cloud_aws": {
+      "keywords": ["aws", "lambda", "s3", "ec2", "dynamodb", "serverless", "deploy", "cloudformation", "cdk", "infrastructure"],
+      "voice": "es-ES-AlvaroNeural",
+      "messages": {
+        "start": "Entendido. Configuraré la infraestructura en la nube.",
+        "success": "Listo. Desplegué los recursos en AWS.",
+        "error": "Hubo un error con la infraestructura. Necesitas que lo revise?"
+      }
+    },
+    "architecture_ia": {
+      "keywords": ["agent", "prompt", "workflow", "ai", "llm", "model", "chain", "rag", "vector"],
+      "voice": "es-CL-CatalinaNeural",
+      "messages": {
+        "start": "Entendido. Diseñaré la arquitectura de IA.",
+        "success": "Listo. Completé el diseño de la arquitectura de agentes.",
+        "error": "Hubo un problema con la arquitectura. Necesitas que lo ajuste?"
+      }
+    },
+    "claude_code": {
+      "keywords": ["claude", "command", "hook", "rule", "mcp", "settings", "config"],
+      "voice": "es-ES-ElviraNeural",
+      "messages": {
+        "start": "Entendido. Configuraré Claude Code.",
+        "success": "Listo. Completé la configuración de Claude Code.",
+        "error": "Hubo un error en la configuración. Necesitas que lo revise?"
+      }
+    },
+    "droid_factory": {
+      "keywords": ["droid", "factory", "session", "skill", "agent", "droids"],
+      "voice": "es-AR-ElenaNeural",
+      "messages": {
+        "start": "Entendido. Trabajaré en la configuración de Droid.",
+        "success": "Listo. Completé la configuración de Droid.",
+        "error": "Hubo un problema con Droid. Necesitas que lo solucione?"
+      }
+    },
+    "kubernetes": {
+      "keywords": ["kubernetes", "k8s", "docker", "container", "pod", "deployment", "service", "helm", "namespace"],
+      "voice": "es-CO-GonzaloNeural",
+      "messages": {
+        "start": "Entendido. Configuraré el entorno de Kubernetes.",
+        "success": "Listo. Desplegué los recursos en Kubernetes.",
+        "error": "Hubo un error con Kubernetes. Necesitas que lo revise?"
+      }
+    },
+    "debug": {
+      "keywords": ["fix", "bug", "error", "debug", "issue", "problem", "failed", "crash"],
+      "voice": "es-AR-TomasNeural",
+      "messages": {
+        "start": "Entendido. Comenzaré a depurar el error.",
+        "success": "Listo. Corregí el problema.",
+        "error": "No pude resolver el error. Necesitas más ayuda?"
+      }
+    },
+    "research": {
+      "keywords": ["search", "find", "research", "investigate", "look", "explore", "analyze", "review"],
+      "voice": "es-ES-XimenaNeural",
+      "messages": {
+        "start": "Entendido. Investigaré sobre el tema.",
+        "success": "Listo. Encontré información relevante.",
+        "error": "No encontré información. Necesitas que busque en otro lado?"
+      }
+    }
+  },
+  "default_voice": "es-CL-CatalinaNeural",
+  "fallback_messages": {
+    "start": "Entendido. Comenzaré a trabajar.",
+    "success": "Listo. Completé la tarea.",
+    "error": "Hubo un error. Necesitas que lo intente de nuevo?"
+  }
+}

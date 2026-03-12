@@ -1,0 +1,10 @@
+# OS files
+.DS_Store
+Thumbs.db
+
+# Node modules (will be installed on target machine)
+node_modules/
+
+# Temporary files
+*.tmp
+*.log

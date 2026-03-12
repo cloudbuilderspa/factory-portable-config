@@ -1,0 +1,76 @@
+#!/usr/bin/env node
+
+import { UniversalEdgeTTS } from 'edge-tts-universal';
+import { writeFile, unlink } from 'fs/promises';
+import { tmpdir } from 'os';
+import { join } from 'path';
+import { spawn } from 'child_process';
+
+const args = process.argv.slice(2);
+
+if (args.length === 0) {
+  console.log('Usage: tts-speak "Text to speak"');
+  console.log('Options:');
+  console.log('  -v, --voice <voice>  Voice to use (default: en-US-EmmaMultilingualNeural)');
+  console.log('  -l, --list           List available voices');
+  process.exit(0);
+}
+
+const listVoices = args.includes('-l') || args.includes('--list');
+
+if (listVoices) {
+  const { listVoicesUniversal } = await import('edge-tts-universal');
+  const voices = await listVoicesUniversal();
+  console.log('Available voices:');
+  voices.forEach(v => {
+    console.log(`  ${v.Name}: ${v.Locale} - ${v.Gender}`);
+  });
+  process.exit(0);
+}
+
+let text = args[0];
+let voice = 'en-US-EmmaMultilingualNeural';
+
+// Parse args
+for (let i = 1; i < args.length; i++) {
+  if ((args[i] === '-v' || args[i] === '--voice') && args[i + 1]) {
+    voice = args[i + 1];
+    i++;
+  }
+}
+
+async function speak(text, voice) {
+  console.log(`Speaking: "${text}" with voice: ${voice}`);
+  
+  const tts = new UniversalEdgeTTS(text, voice);
+  const result = await tts.synthesize();
+  
+  // Convert Blob to Buffer
+  const arrayBuffer = await result.audio.arrayBuffer();
+  const audioData = Buffer.from(arrayBuffer);
+  
+  const tempFile = join(tmpdir(), `tts-${Date.now()}.mp3`);
+  await writeFile(tempFile, Buffer.from(audioData));
+  
+  console.log(`Audio saved to: ${tempFile}`);
+  
+  // Play audio using ffplay (from ffmpeg)
+  const player = spawn('ffplay', ['-nodisp', '-autoexit', '-loglevel', 'quiet', tempFile]);
+  
+  player.on('close', async () => {
+    try {
+      await unlink(tempFile);
+    } catch (e) {}
+    process.exit(0);
+  });
+  
+  player.on('error', (err) => {
+    console.error('Error playing audio:', err.message);
+    process.exit(1);
+  });
+}
+
+speak(text, voice).catch(err => {
+  console.error('Error:', err.message);
+  process.exit(1);
+});
