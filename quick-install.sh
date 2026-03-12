@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
 # Factory Droid Portable Config - Quick Install Script
-# Installs TTS, hooks, MCP config, personal instructions, custom droids, and skills
+# Installs TTS, hooks, MCP config, personal instructions, custom droids, skills, and mission includes
 #
 # Usage:
 #   curl -fsSL https://raw.githubusercontent.com/cloudbuilderspa/factory-portable-config/main/quick-install.sh | bash
@@ -88,7 +88,7 @@ echo -e "${GREEN}✓${NC} uv: $(uv --version)"
 # Create directories
 echo ""
 echo -e "${YELLOW}Setting up directories...${NC}"
-mkdir -p "${FACTORY_DIR}"/{hooks,bin,config,node_modules,droids,skills}
+mkdir -p "${FACTORY_DIR}"/{hooks,bin,config,node_modules,droids,skills,mission-includes}
 
 # Backup existing files
 echo ""
@@ -125,6 +125,7 @@ backup_file "${FACTORY_DIR}/config/droid-voice-scenarios.json"
 backup_file "${FACTORY_DIR}/mcp.json"
 backup_dir "${FACTORY_DIR}/droids"
 backup_dir "${FACTORY_DIR}/skills"
+backup_dir "${FACTORY_DIR}/mission-includes"
 
 if [[ -d "$BACKUP_DIR" ]] && [[ -n "$(ls -A $BACKUP_DIR 2>/dev/null)" ]]; then
     echo -e "${GREEN}✓${NC} Backup created at: ${BACKUP_DIR}"
@@ -160,6 +161,7 @@ download_file "hooks/mcp-keyword-detector.py" "${FACTORY_DIR}/hooks/mcp-keyword-
 download_file "bin/tts-speak" "${FACTORY_DIR}/bin/tts-speak"
 download_file "config/droid-voice-scenarios.json" "${FACTORY_DIR}/config/droid-voice-scenarios.json"
 download_file "mcp-servers.example.json" "${FACTORY_DIR}/mcp-servers.example.json"
+download_file "mission-includes/AGENTS-PERSONAL.md" "${FACTORY_DIR}/mission-includes/AGENTS-PERSONAL.md"
 
 # Make scripts executable
 chmod +x "${FACTORY_DIR}/hooks/droid-speak.sh"
@@ -178,9 +180,7 @@ for droid in "${BMAD_DROIDS[@]}"; do
     for file in droid.yaml README.md SKILL.md; do
         dest="${FACTORY_DIR}/droids/${droid}/${file}"
         mkdir -p "$(dirname "$dest")"
-        if curl -fsSL "${RAW_URL}/droids/${droid}/${file}" -o "${dest}" 2>/dev/null; then
-            :
-        fi
+        curl -fsSL "${RAW_URL}/droids/${droid}/${file}" -o "${dest}" 2>/dev/null || true
     done
     echo -e "  ${BLUE}↓${NC} droids/${droid}/"
 done
@@ -193,9 +193,7 @@ for droid in "${OTHER_DROIDS[@]}"; do
         src_path="${RAW_URL}/droids/${droid}/${file}"
         dest="${FACTORY_DIR}/droids/${droid}/${file}"
         mkdir -p "$(dirname "$dest")"
-        if curl -fsSL "${src_path}" -o "${dest}" 2>/dev/null; then
-            :
-        fi
+        curl -fsSL "${src_path}" -o "${dest}" 2>/dev/null || true
     done
     echo -e "  ${BLUE}↓${NC} droids/${droid}/"
 done
@@ -259,11 +257,19 @@ echo "  • MCP Servers Template - 18 pre-configured MCPs"
 echo "  • BMAD Droids - 17 specialized droids (dev, architect, qa, etc.)"
 echo "  • Custom Droids - worker, docs-fetcher, scrutiny, user-testing"
 echo "  • Skills - context7-docs, xlsx-official"
+echo "  • Mission Includes - AGENTS-PERSONAL.md for Factory missions"
 echo ""
 if [[ -d "$BACKUP_DIR" ]] && [[ -n "$(ls -A $BACKUP_DIR 2>/dev/null)" ]]; then
     echo -e "${BLUE}📦 Backup saved to: ${BACKUP_DIR}${NC}"
     echo ""
 fi
+echo -e "${YELLOW}For Factory Missions:${NC}"
+echo "  Add this line to your mission's AGENTS.md:"
+echo "  \`\`\`"
+echo "  <!-- Include personal configuration -->"
+echo "  See: ~/.factory/mission-includes/AGENTS-PERSONAL.md"
+echo "  \`\`\`"
+echo ""
 echo -e "${YELLOW}Next steps:${NC}"
 echo "  1. Add your API keys to ~/.factory/mcp.json:"
 echo "     - Context7: https://context7.com"
