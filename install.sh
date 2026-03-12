@@ -27,6 +27,7 @@ NC='\033[0m' # No Color
 # Paths
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 FACTORY_DIR="${HOME}/.factory"
+BACKUP_DIR="${HOME}/.factory-backup-$(date +%Y%m%d_%H%M%S)"
 
 echo -e "${BLUE}🤖 Factory Droid Portable Config Installer${NC}"
 echo ""
@@ -85,7 +86,39 @@ fi
 
 echo ""
 
+# Backup existing files
+echo -e "${YELLOW}Creating backup of existing files...${NC}"
+
+backup_file() {
+    local file="$1"
+    if [[ -f "$file" ]]; then
+        local rel_path="${file#$FACTORY_DIR/}"
+        local backup_path="${BACKUP_DIR}/${rel_path}"
+        mkdir -p "$(dirname "$backup_path")"
+        cp "$file" "$backup_path"
+        echo -e "  ${BLUE}↩${NC} Backed up: $rel_path"
+    fi
+}
+
+if [[ "$DRY_RUN" == "false" ]]; then
+    backup_file "${FACTORY_DIR}/AGENTS.md"
+    backup_file "${FACTORY_DIR}/hooks/droid-speak.sh"
+    backup_file "${FACTORY_DIR}/hooks/mcp-keyword-detector.py"
+    backup_file "${FACTORY_DIR}/bin/tts-speak"
+    backup_file "${FACTORY_DIR}/config/droid-voice-scenarios.json"
+    backup_file "${FACTORY_DIR}/mcp.json"
+
+    if [[ -d "$BACKUP_DIR" ]]; then
+        echo -e "${GREEN}✓${NC} Backup created at: ${BACKUP_DIR}"
+    else
+        echo -e "${BLUE}ℹ${NC} No existing files to backup"
+    fi
+else
+    echo "  Would backup existing files to: ${BACKUP_DIR}"
+fi
+
 # Install edge-tts-universal
+echo ""
 echo -e "${YELLOW}Installing TTS engine (edge-tts-universal)...${NC}"
 if [[ "$DRY_RUN" == "false" ]]; then
     mkdir -p "${FACTORY_DIR}"
@@ -154,6 +187,9 @@ if [[ "$DRY_RUN" == "false" ]]; then
     
     echo ""
     echo -e "${GREEN}✅ Installation complete!${NC}"
+    if [[ -d "$BACKUP_DIR" ]]; then
+        echo -e "${BLUE}📦 Backup saved to: ${BACKUP_DIR}${NC}"
+    fi
     echo ""
     echo -e "${YELLOW}Next steps:${NC}"
     echo "  1. Add your API keys to ~/.factory/mcp.json:"

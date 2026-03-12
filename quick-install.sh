@@ -22,6 +22,7 @@ NC='\033[0m'
 REPO_URL="https://github.com/cloudbuilderspa/factory-portable-config"
 RAW_URL="https://raw.githubusercontent.com/cloudbuilderspa/factory-portable-config/main"
 FACTORY_DIR="${HOME}/.factory"
+BACKUP_DIR="${HOME}/.factory-backup-$(date +%Y%m%d_%H%M%S)"
 
 echo -e "${BLUE}"
 echo "╔════════════════════════════════════════════════════════════╗"
@@ -89,6 +90,35 @@ echo ""
 echo -e "${YELLOW}Setting up directories...${NC}"
 mkdir -p "${FACTORY_DIR}"/{hooks,bin,config,node_modules}
 
+# Backup existing files
+echo ""
+echo -e "${YELLOW}Creating backup of existing files...${NC}"
+
+backup_file() {
+    local file="$1"
+    if [[ -f "$file" ]]; then
+        local rel_path="${file#$FACTORY_DIR/}"
+        local backup_path="${BACKUP_DIR}/${rel_path}"
+        mkdir -p "$(dirname "$backup_path")"
+        cp "$file" "$backup_path"
+        echo -e "  ${BLUE}↩${NC} Backed up: $rel_path"
+    fi
+}
+
+# Backup existing files before overwriting
+backup_file "${FACTORY_DIR}/AGENTS.md"
+backup_file "${FACTORY_DIR}/hooks/droid-speak.sh"
+backup_file "${FACTORY_DIR}/hooks/mcp-keyword-detector.py"
+backup_file "${FACTORY_DIR}/bin/tts-speak"
+backup_file "${FACTORY_DIR}/config/droid-voice-scenarios.json"
+backup_file "${FACTORY_DIR}/mcp.json"
+
+if [[ -d "$BACKUP_DIR" ]]; then
+    echo -e "${GREEN}✓${NC} Backup created at: ${BACKUP_DIR}"
+else
+    echo -e "${BLUE}ℹ${NC} No existing files to backup"
+fi
+
 # Install edge-tts-universal
 echo ""
 echo -e "${YELLOW}Installing TTS engine (edge-tts-universal)...${NC}"
@@ -155,6 +185,10 @@ echo "  • TTS Voice System - droid-speak.sh + edge-tts-universal"
 echo "  • MCP Auto-Invoke - Keyword detection for 15+ MCPs"
 echo "  • MCP Servers Template - 18 pre-configured MCPs"
 echo ""
+if [[ -d "$BACKUP_DIR" ]]; then
+    echo -e "${BLUE}📦 Backup saved to: ${BACKUP_DIR}${NC}"
+    echo ""
+fi
 echo -e "${YELLOW}Next steps:${NC}"
 echo "  1. Add your API keys to ~/.factory/mcp.json:"
 echo "     - Context7: https://context7.com"
