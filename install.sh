@@ -86,6 +86,10 @@ fi
 
 echo ""
 
+# Create directories
+echo -e "${YELLOW}Setting up directories...${NC}"
+mkdir -p "${FACTORY_DIR}"/{hooks,bin,config,node_modules,droids,skills}
+
 # Backup existing files
 echo -e "${YELLOW}Creating backup of existing files...${NC}"
 
@@ -100,6 +104,17 @@ backup_file() {
     fi
 }
 
+backup_dir() {
+    local dir="$1"
+    if [[ -d "$dir" ]]; then
+        local rel_path="${dir#$FACTORY_DIR/}"
+        local backup_path="${BACKUP_DIR}/${rel_path}"
+        mkdir -p "$backup_path"
+        cp -r "$dir"/* "$backup_path"/ 2>/dev/null || true
+        echo -e "  ${BLUE}↩${NC} Backed up: $rel_path/"
+    fi
+}
+
 if [[ "$DRY_RUN" == "false" ]]; then
     backup_file "${FACTORY_DIR}/AGENTS.md"
     backup_file "${FACTORY_DIR}/hooks/droid-speak.sh"
@@ -107,8 +122,10 @@ if [[ "$DRY_RUN" == "false" ]]; then
     backup_file "${FACTORY_DIR}/bin/tts-speak"
     backup_file "${FACTORY_DIR}/config/droid-voice-scenarios.json"
     backup_file "${FACTORY_DIR}/mcp.json"
+    backup_dir "${FACTORY_DIR}/droids"
+    backup_dir "${FACTORY_DIR}/skills"
 
-    if [[ -d "$BACKUP_DIR" ]]; then
+    if [[ -d "$BACKUP_DIR" ]] && [[ -n "$(ls -A $BACKUP_DIR 2>/dev/null)" ]]; then
         echo -e "${GREEN}✓${NC} Backup created at: ${BACKUP_DIR}"
     else
         echo -e "${BLUE}ℹ${NC} No existing files to backup"
@@ -167,8 +184,32 @@ install_file "${SCRIPT_DIR}/bin/tts-speak" "${FACTORY_DIR}/bin/tts-speak" "TTS s
 # Install voice scenarios config
 install_file "${SCRIPT_DIR}/config/droid-voice-scenarios.json" "${FACTORY_DIR}/config/droid-voice-scenarios.json" "Voice scenarios config"
 
+# Install droids
+echo ""
+echo -e "${YELLOW}Installing custom droids...${NC}"
+if [[ "$DRY_RUN" == "false" ]]; then
+    mkdir -p "${FACTORY_DIR}/droids"
+    if [[ -d "${SCRIPT_DIR}/droids" ]]; then
+        cp -r "${SCRIPT_DIR}/droids"/* "${FACTORY_DIR}/droids/"
+        echo -e "  ${GREEN}✓${NC} Custom droids installed"
+    fi
+fi
+
+# Install skills
+echo ""
+echo -e "${YELLOW}Installing skills...${NC}"
+if [[ "$DRY_RUN" == "false" ]]; then
+    mkdir -p "${FACTORY_DIR}/skills"
+    if [[ -d "${SCRIPT_DIR}/skills" ]]; then
+        cp -r "${SCRIPT_DIR}/skills"/* "${FACTORY_DIR}/skills/"
+        echo -e "  ${GREEN}✓${NC} Skills installed"
+    fi
+fi
+
 # Setup MCP config
 if [[ "$DRY_RUN" == "false" ]]; then
+    echo ""
+    echo -e "${YELLOW}Setting up MCP configuration...${NC}"
     if [[ ! -f "${FACTORY_DIR}/mcp.json" ]]; then
         cp "${SCRIPT_DIR}/mcp-servers.example.json" "${FACTORY_DIR}/mcp.json"
         echo -e "  ${GREEN}✓${NC} Created mcp.json from template"
@@ -187,9 +228,17 @@ if [[ "$DRY_RUN" == "false" ]]; then
     
     echo ""
     echo -e "${GREEN}✅ Installation complete!${NC}"
-    if [[ -d "$BACKUP_DIR" ]]; then
+    if [[ -d "$BACKUP_DIR" ]] && [[ -n "$(ls -A $BACKUP_DIR 2>/dev/null)" ]]; then
         echo -e "${BLUE}📦 Backup saved to: ${BACKUP_DIR}${NC}"
     fi
+    echo ""
+    echo "Installed components:"
+    echo "  • AGENTS.md - Personal instructions"
+    echo "  • TTS Voice System - droid-speak.sh + edge-tts-universal"
+    echo "  • MCP Auto-Invoke - Keyword detection for 15+ MCPs"
+    echo "  • MCP Servers Template - 18 pre-configured MCPs"
+    echo "  • Custom Droids - worker, docs-fetcher, scrutiny, user-testing"
+    echo "  • Skills - context7-docs, xlsx-official"
     echo ""
     echo -e "${YELLOW}Next steps:${NC}"
     echo "  1. Add your API keys to ~/.factory/mcp.json:"

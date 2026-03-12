@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
 # Factory Droid Portable Config - Quick Install Script
-# Installs TTS, hooks, MCP config, and personal instructions
+# Installs TTS, hooks, MCP config, personal instructions, custom droids, and skills
 #
 # Usage:
 #   curl -fsSL https://raw.githubusercontent.com/cloudbuilderspa/factory-portable-config/main/quick-install.sh | bash
@@ -88,7 +88,7 @@ echo -e "${GREEN}✓${NC} uv: $(uv --version)"
 # Create directories
 echo ""
 echo -e "${YELLOW}Setting up directories...${NC}"
-mkdir -p "${FACTORY_DIR}"/{hooks,bin,config,node_modules}
+mkdir -p "${FACTORY_DIR}"/{hooks,bin,config,node_modules,droids,skills}
 
 # Backup existing files
 echo ""
@@ -105,6 +105,17 @@ backup_file() {
     fi
 }
 
+backup_dir() {
+    local dir="$1"
+    if [[ -d "$dir" ]]; then
+        local rel_path="${dir#$FACTORY_DIR/}"
+        local backup_path="${BACKUP_DIR}/${rel_path}"
+        mkdir -p "$backup_path"
+        cp -r "$dir"/* "$backup_path"/ 2>/dev/null || true
+        echo -e "  ${BLUE}↩${NC} Backed up: $rel_path/"
+    fi
+}
+
 # Backup existing files before overwriting
 backup_file "${FACTORY_DIR}/AGENTS.md"
 backup_file "${FACTORY_DIR}/hooks/droid-speak.sh"
@@ -112,8 +123,10 @@ backup_file "${FACTORY_DIR}/hooks/mcp-keyword-detector.py"
 backup_file "${FACTORY_DIR}/bin/tts-speak"
 backup_file "${FACTORY_DIR}/config/droid-voice-scenarios.json"
 backup_file "${FACTORY_DIR}/mcp.json"
+backup_dir "${FACTORY_DIR}/droids"
+backup_dir "${FACTORY_DIR}/skills"
 
-if [[ -d "$BACKUP_DIR" ]]; then
+if [[ -d "$BACKUP_DIR" ]] && [[ -n "$(ls -A $BACKUP_DIR 2>/dev/null)" ]]; then
     echo -e "${GREEN}✓${NC} Backup created at: ${BACKUP_DIR}"
 else
     echo -e "${BLUE}ℹ${NC} No existing files to backup"
@@ -154,6 +167,47 @@ chmod +x "${FACTORY_DIR}/bin/tts-speak"
 
 echo -e "${GREEN}✓${NC} All files downloaded"
 
+# Download custom droids
+echo ""
+echo -e "${YELLOW}Downloading custom droids...${NC}"
+
+DROIDS=(
+    "worker/worker.md"
+    "worker/README.md"
+    "docs-fetcher.md"
+    "scrutiny-feature-reviewer/scrutiny-feature-reviewer.md"
+    "scrutiny-feature-reviewer/README.md"
+    "user-testing-flow-validator/user-testing-flow-validator.md"
+    "user-testing-flow-validator/README.md"
+)
+
+for droid_file in "${DROIDS[@]}"; do
+    dest="${FACTORY_DIR}/droids/${droid_file}"
+    mkdir -p "$(dirname "$dest")"
+    echo -e "  ${BLUE}↓${NC} droids/${droid_file}"
+    curl -fsSL "${RAW_URL}/droids/${droid_file}" -o "${dest}"
+done
+
+echo -e "${GREEN}✓${NC} Custom droids downloaded"
+
+# Download skills
+echo ""
+echo -e "${YELLOW}Downloading skills...${NC}"
+
+SKILLS=(
+    "context7-docs/SKILL.md"
+    "xlsx-official/SKILL.md"
+)
+
+for skill_file in "${SKILLS[@]}"; do
+    dest="${FACTORY_DIR}/skills/${skill_file}"
+    mkdir -p "$(dirname "$dest")"
+    echo -e "  ${BLUE}↓${NC} skills/${skill_file}"
+    curl -fsSL "${RAW_URL}/skills/${skill_file}" -o "${dest}"
+done
+
+echo -e "${GREEN}✓${NC} Skills downloaded"
+
 # Setup MCP config
 echo ""
 echo -e "${YELLOW}Setting up MCP configuration...${NC}"
@@ -184,8 +238,10 @@ echo "  • AGENTS.md - Personal instructions"
 echo "  • TTS Voice System - droid-speak.sh + edge-tts-universal"
 echo "  • MCP Auto-Invoke - Keyword detection for 15+ MCPs"
 echo "  • MCP Servers Template - 18 pre-configured MCPs"
+echo "  • Custom Droids - worker, docs-fetcher, scrutiny, user-testing"
+echo "  • Skills - context7-docs, xlsx-official"
 echo ""
-if [[ -d "$BACKUP_DIR" ]]; then
+if [[ -d "$BACKUP_DIR" ]] && [[ -n "$(ls -A $BACKUP_DIR 2>/dev/null)" ]]; then
     echo -e "${BLUE}📦 Backup saved to: ${BACKUP_DIR}${NC}"
     echo ""
 fi
