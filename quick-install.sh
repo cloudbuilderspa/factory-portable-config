@@ -169,24 +169,42 @@ echo -e "${GREEN}✓${NC} All files downloaded"
 
 # Download custom droids
 echo ""
-echo -e "${YELLOW}Downloading custom droids...${NC}"
+echo -e "${YELLOW}Downloading custom droids (21 total)...${NC}"
 
-DROIDS=(
-    "worker/worker.md"
-    "worker/README.md"
-    "docs-fetcher.md"
-    "scrutiny-feature-reviewer/scrutiny-feature-reviewer.md"
-    "scrutiny-feature-reviewer/README.md"
-    "user-testing-flow-validator/user-testing-flow-validator.md"
-    "user-testing-flow-validator/README.md"
-)
+# BMAD Droids
+BMAD_DROIDS=("bmad-a11y" "bmad-architect" "bmad-db-admin" "bmad-dev" "bmad-docs" "bmad-growth" "bmad-init" "bmad-manager" "bmad-master" "bmad-ops" "bmad-perf" "bmad-planner" "bmad-qa" "bmad-security" "bmad-sre" "bmad-tea" "bmad-ux")
 
-for droid_file in "${DROIDS[@]}"; do
-    dest="${FACTORY_DIR}/droids/${droid_file}"
-    mkdir -p "$(dirname "$dest")"
-    echo -e "  ${BLUE}↓${NC} droids/${droid_file}"
-    curl -fsSL "${RAW_URL}/droids/${droid_file}" -o "${dest}"
+for droid in "${BMAD_DROIDS[@]}"; do
+    for file in droid.yaml README.md SKILL.md; do
+        dest="${FACTORY_DIR}/droids/${droid}/${file}"
+        mkdir -p "$(dirname "$dest")"
+        if curl -fsSL "${RAW_URL}/droids/${droid}/${file}" -o "${dest}" 2>/dev/null; then
+            :
+        fi
+    done
+    echo -e "  ${BLUE}↓${NC} droids/${droid}/"
 done
+
+# Other droids
+OTHER_DROIDS=("diagram-architect" "worker" "scrutiny-feature-reviewer" "user-testing-flow-validator")
+
+for droid in "${OTHER_DROIDS[@]}"; do
+    for file in *.md droid.yaml README.md SKILL.md; do
+        src_path="${RAW_URL}/droids/${droid}/${file}"
+        dest="${FACTORY_DIR}/droids/${droid}/${file}"
+        mkdir -p "$(dirname "$dest")"
+        if curl -fsSL "${src_path}" -o "${dest}" 2>/dev/null; then
+            :
+        fi
+    done
+    echo -e "  ${BLUE}↓${NC} droids/${droid}/"
+done
+
+# Standalone droid files
+download_file "droids/docs-fetcher.md" "${FACTORY_DIR}/droids/docs-fetcher.md"
+download_file "droids/scrutiny-feature-reviewer.md" "${FACTORY_DIR}/droids/scrutiny-feature-reviewer.md"
+download_file "droids/user-testing-flow-validator.md" "${FACTORY_DIR}/droids/user-testing-flow-validator.md"
+download_file "droids/worker.md" "${FACTORY_DIR}/droids/worker.md"
 
 echo -e "${GREEN}✓${NC} Custom droids downloaded"
 
@@ -238,6 +256,7 @@ echo "  • AGENTS.md - Personal instructions"
 echo "  • TTS Voice System - droid-speak.sh + edge-tts-universal"
 echo "  • MCP Auto-Invoke - Keyword detection for 15+ MCPs"
 echo "  • MCP Servers Template - 18 pre-configured MCPs"
+echo "  • BMAD Droids - 17 specialized droids (dev, architect, qa, etc.)"
 echo "  • Custom Droids - worker, docs-fetcher, scrutiny, user-testing"
 echo "  • Skills - context7-docs, xlsx-official"
 echo ""
