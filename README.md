@@ -25,12 +25,41 @@ cd factory-portable-config
 | `hooks/mcp-keyword-detector.py` | Auto-detects keywords and invokes appropriate MCP tools |
 | `bin/tts-speak` | Edge TTS binary for text-to-speech using Microsoft Edge voices |
 | `config/droid-voice-scenarios.json` | Voice profiles mapped to scenarios (cloud, debug, research, etc.) |
+| `mcp-servers.example.json` | MCP servers configuration template (sanitized) |
 
 ## Requirements
 
 - Node.js (for edge-tts-universal)
 - ffmpeg (for audio playback)
+- Python 3 + uv (for AWS MCPs)
 - Factory CLI (`npm install -g @factory/cli`)
+
+## MCP Servers Setup
+
+### 1. Copy the template
+```bash
+cp mcp-servers.example.json ~/.factory/mcp.json
+```
+
+### 2. Add your API keys
+
+Replace the placeholders in `~/.factory/mcp.json`:
+
+| MCP | Placeholder | Where to get |
+|-----|-------------|--------------|
+| `context7` | `YOUR_CONTEXT7_API_KEY` | https://context7.com |
+| `github` | `YOUR_GITHUB_PAT` | https://github.com/settings/tokens (needs `repo`, `issues` scopes) |
+
+### 3. Included MCPs (18 total)
+
+| Category | MCPs |
+|----------|------|
+| **AWS** | aws-knowledge, aws-documentation, aws-pricing, aws-cdk-mcp, localstack |
+| **Cloud/Serverless** | vercel, supabase, firebase |
+| **Dev Tools** | github, memory, sequential-thinking |
+| **Browser/Testing** | playwright, chrome-devtools |
+| **Diagrams** | drawio-mcp, excalidraw-mcp |
+| **Docs** | context7 |
 
 ## Manual Installation
 
@@ -42,10 +71,14 @@ cp AGENTS.md ~/.factory/
 cp hooks/* ~/.factory/hooks/
 cp bin/tts-speak ~/.factory/bin/
 cp config/droid-voice-scenarios.json ~/.factory/config/
+cp mcp-servers.example.json ~/.factory/mcp.json
 
 # Install TTS dependency
 cd ~/.factory
 npm install edge-tts-universal --save
+
+# Add your API keys to mcp.json
+# Replace YOUR_CONTEXT7_API_KEY and YOUR_GITHUB_PAT
 ```
 
 ## Customization

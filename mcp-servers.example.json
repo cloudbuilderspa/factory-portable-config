@@ -1,0 +1,116 @@
+{
+  "mcpServers": {
+    "aws-knowledge": {
+      "type": "http",
+      "url": "https://knowledge-mcp.global.api.aws",
+      "disabled": false
+    },
+    "context7": {
+      "type": "http",
+      "url": "https://mcp.context7.com/mcp",
+      "headers": {
+        "CONTEXT7_API_KEY": "YOUR_CONTEXT7_API_KEY"
+      },
+      "disabled": false,
+      "_comment": "Get your API key at: https://context7.com"
+    },
+    "playwright": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@playwright/mcp@latest"],
+      "disabled": false
+    },
+    "chrome-devtools": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "chrome-devtools-mcp@latest"],
+      "disabled": false
+    },
+    "supabase": {
+      "type": "http",
+      "url": "https://mcp.supabase.com/mcp",
+      "disabled": false
+    },
+    "vercel": {
+      "type": "http",
+      "url": "https://mcp.vercel.com/",
+      "disabled": false
+    },
+    "localstack-mcp-server": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@localstack/localstack-mcp-server"],
+      "disabled": false
+    },
+    "aws-documentation": {
+      "type": "stdio",
+      "command": "uvx",
+      "args": ["awslabs.aws-documentation-mcp-server@latest"],
+      "env": {
+        "FASTMCP_LOG_LEVEL": "ERROR",
+        "AWS_DOCUMENTATION_PARTITION": "aws"
+      },
+      "disabled": false
+    },
+    "aws-pricing": {
+      "type": "stdio",
+      "command": "uvx",
+      "args": ["awslabs.aws-pricing-mcp-server@latest"],
+      "env": {
+        "FASTMCP_LOG_LEVEL": "ERROR"
+      },
+      "disabled": false
+    },
+    "aws-cdk-mcp": {
+      "type": "stdio",
+      "command": "uvx",
+      "args": ["awslabs.cdk-mcp-server@latest"],
+      "env": {
+        "FASTMCP_LOG_LEVEL": "ERROR"
+      },
+      "disabled": true,
+      "_comment": "Enable when using CDK for infrastructure as code"
+    },
+    "firebase": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "firebase-tools@latest", "mcp"],
+      "disabled": false
+    },
+    "github": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-github"],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "YOUR_GITHUB_PAT"
+      },
+      "disabled": false,
+      "_comment": "Create PAT at: https://github.com/settings/tokens (needs repo, issues permissions)"
+    },
+    "memory": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-memory"],
+      "disabled": false
+    },
+    "sequential-thinking": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"],
+      "disabled": false
+    },
+    "drawio-mcp": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@drawio/mcp"],
+      "disabled": false
+    },
+    "excalidraw-mcp": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "excalidraw-mcp"],
+      "disabled": true,
+      "_comment": "Enable for hand-drawn style diagrams"
+    }
+  }
+}
