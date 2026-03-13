@@ -22,6 +22,7 @@ REPO_URL="https://github.com/cloudbuilderspa/factory-portable-config"
 RAW_URL="https://raw.githubusercontent.com/cloudbuilderspa/factory-portable-config/main"
 FACTORY_DIR="${HOME}/.factory"
 
+
 echo -e "${CYAN}"
 echo "╔════════════════════════════════════════════════════════════╗"
 echo "║     Factory Droid - Interactive Installer                  ║"
@@ -49,6 +50,33 @@ options=(
     "QUIT"
 )
 
+parse_selections() {
+    local input="$1"
+    local -a selected
+    local IFS=','
+
+    read -ra parts <<< "$input"
+    for part in "${parts[@]}"; do
+        part=$(echo "$part" | tr -d ' ')
+        if [[ "$part" =~ ^[0-9]+$ ]] && [[ "$part" -ge 1 ]] && [[ "$part" -le ${#options[@]} ]]; then
+            selected+=("$((part-1))")
+        fi
+    done
+
+    echo "${selected[@]}"
+}
+
+if [[ "$1" == "--self-test" ]]; then
+    test_input="1,3,5"
+    parsed="$(parse_selections "$test_input")"
+    if [[ "$parsed" == "0 2 4" ]]; then
+        echo "Self-test OK: '$test_input' -> [$parsed]"
+        exit 0
+    fi
+    echo "Self-test FAILED: '$test_input' -> [$parsed]"
+    exit 1
+fi
+
 # Display menu
 echo -e "${BOLD}Select components to install:${NC}"
 echo ""
@@ -58,18 +86,21 @@ done
 echo ""
 
 # Get selections
-echo -e "${YELLOW}Enter selections (comma-separated, e.g., 1,3,5):${NC} "
-read -r selections
+selections=""
+if [[ "$1" == "--selections" ]] && [[ -n "${2:-}" ]]; then
+    selections="$2"
+else
+    echo -e "${YELLOW}Enter selections (comma-separated, e.g., 1,3,5):${NC} "
+    if [[ -t 0 ]]; then
+        read -r selections
+    else
+        read -r selections </dev/tty
+    fi
+fi
 
 # Parse selections
 selected=()
-IFS=',' read -ra parts <<< "$selections"
-for part in "${parts[@]}"; do
-    part=$(echo "$part" | tr -d ' ')
-    if [[ "$part" =~ ^[0-9]+$ ]] && [[ "$part" -ge 1 ]] && [[ "$part" -le ${#options[@]} ]]; then
-        selected+=("$((part-1))")
-    fi
-done
+read -ra selected <<< "$(parse_selections "$selections")"
 
 # Handle "ALL" option
 if printf '%s\n' "${selected[@]}" | grep -q "^8$"; then
