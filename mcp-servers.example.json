@@ -71,6 +71,13 @@
       "disabled": true,
       "_comment": "Enable when using CDK for infrastructure as code"
     },
+    "dart": {
+      "type": "stdio",
+      "command": "dart",
+      "args": ["mcp-server"],
+      "disabled": false,
+      "_comment": "Requires Dart SDK 3.9+ (MCP server)"
+    },
     "firebase": {
       "type": "stdio",
       "command": "npx",
