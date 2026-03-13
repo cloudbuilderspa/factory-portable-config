@@ -127,7 +127,13 @@ echo ""
 
 # Confirm
 echo -e "${YELLOW}Proceed? [Y/n]${NC}"
-read -r confirm
+if [[ -t 0 ]]; then
+    read -r confirm || confirm=""
+else
+    if ! read -r confirm </dev/tty; then
+        confirm="y"
+    fi
+fi
 if [[ "$confirm" =~ ^[Nn]$ ]]; then
     echo -e "${BLUE}Cancelled.${NC}"
     exit 0
