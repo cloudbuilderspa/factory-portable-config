@@ -21,6 +21,9 @@ BOLD='\033[1m'
 REPO_URL="https://github.com/cloudbuilderspa/factory-portable-config"
 RAW_URL="https://raw.githubusercontent.com/cloudbuilderspa/factory-portable-config/main"
 FACTORY_DIR="${HOME}/.factory"
+DRY_RUN=false
+SELF_TEST=false
+SELECTIONS=""
 
 
 echo -e "${CYAN}"
@@ -29,12 +32,25 @@ echo "║     Factory Droid - Interactive Installer                  ║"
 echo "╚════════════════════════════════════════════════════════════╝"
 echo -e "${NC}"
 
-# Check if Factory CLI is installed
-if ! command -v droid &> /dev/null; then
-    echo -e "${RED}❌ Factory CLI not found. Please install it first:${NC}"
-    echo "   npm install -g @factory/cli"
-    exit 1
-fi
+while (( "$#" )); do
+    case "$1" in
+        --dry-run|--no-install)
+            DRY_RUN=true
+            shift
+            ;;
+        --self-test)
+            SELF_TEST=true
+            shift
+            ;;
+        --selections)
+            SELECTIONS="${2:-}"
+            shift 2
+            ;;
+        *)
+            shift
+            ;;
+    esac
+done
 
 # Menu options
 options=(
@@ -66,7 +82,7 @@ parse_selections() {
     echo "${selected[@]}"
 }
 
-if [[ "$1" == "--self-test" ]]; then
+if [[ "$SELF_TEST" == "true" ]]; then
     test_input="1,3,5"
     parsed="$(parse_selections "$test_input")"
     if [[ "$parsed" == "0 2 4" ]]; then
@@ -74,6 +90,13 @@ if [[ "$1" == "--self-test" ]]; then
         exit 0
     fi
     echo "Self-test FAILED: '$test_input' -> [$parsed]"
+    exit 1
+fi
+
+# Check if Factory CLI is installed (skip in dry-run)
+if [[ "$DRY_RUN" != "true" ]] && ! command -v droid &> /dev/null; then
+    echo -e "${RED}❌ Factory CLI not found. Please install it first:${NC}"
+    echo "   npm install -g @factory/cli"
     exit 1
 fi
 
@@ -87,8 +110,8 @@ echo ""
 
 # Get selections
 selections=""
-if [[ "$1" == "--selections" ]] && [[ -n "${2:-}" ]]; then
-    selections="$2"
+if [[ -n "$SELECTIONS" ]]; then
+    selections="$SELECTIONS"
 else
     echo -e "${YELLOW}Enter selections (comma-separated, e.g., 1,3,5):${NC} "
     if [[ -t 0 ]]; then
@@ -130,12 +153,15 @@ echo -e "${YELLOW}Proceed? [Y/n]${NC}"
 if [[ -t 0 ]]; then
     read -r confirm || confirm=""
 else
-    if ! read -r confirm </dev/tty; then
-        confirm="y"
-    fi
+    confirm="y"
 fi
 if [[ "$confirm" =~ ^[Nn]$ ]]; then
     echo -e "${BLUE}Cancelled.${NC}"
+    exit 0
+fi
+
+if [[ "$DRY_RUN" == "true" ]]; then
+    echo -e "${BLUE}Dry-run mode: skipping installs and downloads.${NC}"
     exit 0
 fi
 

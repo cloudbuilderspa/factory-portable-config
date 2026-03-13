@@ -16,8 +16,8 @@ BLUE='\033[0;34m'
 YELLOW='\033[1;33m'
 NC='\033[0m'
 
-REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-FACTORY_DIR="${HOME}/.factory"
+REPO_DIR="${REPO_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)}"
+FACTORY_DIR="${FACTORY_DIR:-${HOME}/.factory}"
 
 echo -e "${BLUE}🔄 Syncing Factory config to portable repo...${NC}"
 echo ""
