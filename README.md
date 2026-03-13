@@ -2,53 +2,54 @@
 
 Personal configuration for Factory Droid with TTS voice, MCP auto-invoke, and personal instructions.
 
-## 🚀 Quick Install (One Command)
+## Quick Install (One Command)
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/cloudbuilderspa/factory-portable-config/main/quick-install.sh | bash
 ```
 
 This will automatically install:
-- ✅ Node.js (if not present)
-- ✅ ffmpeg (for audio playback)
-- ✅ uv (for AWS MCPs)
-- ✅ edge-tts-universal (TTS engine)
-- ✅ All hooks and configuration files
+- Node.js (if not present)
+- ffmpeg (for audio playback)
+- uv (for AWS MCPs)
+- edge-tts-universal (TTS engine)
+- All hooks and configuration files
 
-## 📦 What's Included
+## Interactive Install
+
+Select what you want to install:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/cloudbuilderspa/factory-portable-config/main/quick-install-interactive.sh | bash
+```
+
+Options: AGENTS.md, TTS Voice, MCP Auto-Invoke, MCP Servers, Skills, Droids, Mission Includes.
+
+## What's Included
 
 | Component | Description |
 |-----------|-------------|
-| **AGENTS.md** | Personal instructions for all Droid sessions |
-| **TTS Voice** | Voice synthesis - Droid speaks after task completions |
-| **MCP Auto-Invoke** | Auto-detects keywords and invokes appropriate MCP tools |
-| **MCP Servers** | 18 pre-configured MCP servers template |
+| AGENTS.md | Personal instructions for all Droid sessions |
+| TTS Voice | Voice synthesis - Droid speaks after task completions |
+| MCP Auto-Invoke | Auto-detects keywords and invokes appropriate MCP tools |
+| MCP Servers | 18 pre-configured MCP servers template |
+| Skills | context7-docs, xlsx-official |
+| Droids | 17 BMAD droids + custom droids (worker, docs-fetcher, etc.) |
+| Mission Includes | AGENTS-PERSONAL.md for Factory missions |
 
-## 🔧 MCP Servers (18 included)
-
-| Category | MCPs |
-|----------|------|
-| **AWS** | aws-knowledge, aws-documentation, aws-pricing, aws-cdk-mcp, localstack |
-| **Cloud/Serverless** | vercel, supabase, firebase |
-| **Dev Tools** | github, memory, sequential-thinking |
-| **Browser/Testing** | playwright, chrome-devtools |
-| **Diagrams** | drawio-mcp, excalidraw-mcp |
-| **Docs** | context7 |
-
-## 🔑 API Keys Setup
+## API Keys Setup
 
 After installation, add your API keys to `~/.factory/mcp.json`:
 
 ```bash
-# Edit the file
 nano ~/.factory/mcp.json
 ```
 
 Replace these placeholders:
-- `YOUR_CONTEXT7_API_KEY` → Get at https://context7.com
-- `YOUR_GITHUB_PAT` → Create at https://github.com/settings/tokens (needs `repo` scope)
+- `YOUR_CONTEXT7_API_KEY` -> Get at https://context7.com
+- `YOUR_GITHUB_PAT` -> Create at https://github.com/settings/tokens (needs `repo` scope)
 
-## 🎤 Voice Scenarios
+## Voice Scenarios
 
 The TTS system uses different voices based on context:
 
@@ -62,7 +63,7 @@ The TTS system uses different voices based on context:
 
 Test voice: `~/.factory/hooks/droid-speak.sh "Hola mundo"`
 
-## 📋 Manual Installation
+## Manual Installation
 
 If you prefer manual setup:
 
@@ -73,32 +74,25 @@ cd factory-portable-config
 
 # Run installer
 ./install.sh
-
-# Or copy files manually
-cp AGENTS.md ~/.factory/
-cp hooks/* ~/.factory/hooks/
-cp bin/tts-speak ~/.factory/bin/
-cp config/droid-voice-scenarios.json ~/.factory/config/
-cp mcp-servers.example.json ~/.factory/mcp.json
-
-# Install TTS dependency
-cd ~/.factory && npm install edge-tts-universal --save
 ```
 
-## 🔄 Update
-
-Re-run the quick install command to update:
+## Development Workflow
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/cloudbuilderspa/factory-portable-config/main/quick-install.sh | bash
+# Develop in ~/.factory/
+# Add new MCPs, hooks, skills, droids
+
+# Sync to repo (sanitizes tokens)
+cd ~/.factory/factory-portable-config
+./sync-to-repo.sh --commit --push
 ```
 
-## 📁 Directory Structure
+## Directory Structure
 
 ```
 ~/.factory/
 ├── AGENTS.md                    # Personal instructions
-├── mcp.json                     # MCP servers config (from template)
+├── mcp.json                     # MCP servers config
 ├── hooks/
 │   ├── droid-speak.sh          # TTS voice hook
 │   └── mcp-keyword-detector.py # MCP auto-invoke
@@ -106,37 +100,33 @@ curl -fsSL https://raw.githubusercontent.com/cloudbuilderspa/factory-portable-co
 │   └── tts-speak               # Edge TTS binary
 ├── config/
 │   └── droid-voice-scenarios.json
+├── droids/                     # Custom droids
+├── skills/                     # Custom skills
+├── mission-includes/           # Config for Factory missions
 └── node_modules/
     └── edge-tts-universal/     # TTS engine
 ```
 
-## ⚙️ How It Works
+## How It Works
 
 ```
 User sends prompt
-       │
-       ▼
-┌──────────────────────────────┐
-│ mcp-keyword-detector.py      │
-│ Detects: aws, react, github  │
-│ Injects MCP instructions     │
-└──────────────────────────────┘
-       │
-       ▼
-┌──────────────────────────────┐
-│ Droid + AGENTS.md            │
-│ Processes with personal      │
-│ instructions loaded          │
-└──────────────────────────────┘
-       │
-       ▼
-┌──────────────────────────────┐
-│ Task completed               │
-│ droid-speak.sh → tts-speak   │
-│ "Listo. Completé la tarea."  │
-└──────────────────────────────┘
+       |
+       v
+mcp-keyword-detector.py
+Detects: aws, react, github
+Injects MCP instructions
+       |
+       v
+Droid + AGENTS.md
+Processes with personal instructions
+       |
+       v
+Task completed
+droid-speak.sh -> tts-speak
+"Listo. Complete la tarea."
 ```
 
-## 📜 License
+## License
 
 MIT - Use freely for your Factory Droid setup.
