@@ -58,7 +58,7 @@ options=(
     "TTS Voice System (hooks + bin + config)"
     "MCP Auto-Invoke Hook"
     "MCP Servers Template"
-    "Skills (context7-docs, xlsx-official)"
+    "Skills (official Vercel)"
     "BMAD Droids (17 droids)"
     "Custom Droids (worker, docs-fetcher, etc.)"
     "Mission Includes (AGENTS-PERSONAL.md)"
@@ -255,11 +255,43 @@ for idx in "${selected[@]}"; do
             ;;
         4) # Skills
             echo -e "${YELLOW}Installing Skills...${NC}"
-            mkdir -p "${FACTORY_DIR}/skills/context7-docs"
-            mkdir -p "${FACTORY_DIR}/skills/xlsx-official"
-            download_file "skills/context7-docs/SKILL.md" "${FACTORY_DIR}/skills/context7-docs/SKILL.md"
-            download_file "skills/xlsx-official/SKILL.md" "${FACTORY_DIR}/skills/xlsx-official/SKILL.md"
-            echo -e "  ${GREEN}✓${NC} Skills installed (context7-docs, xlsx-official)"
+            SKILLS=(
+                "context7-docs/SKILL.md"
+                "xlsx-official/SKILL.md"
+                "vercel-react-best-practices/SKILL.md"
+                "vercel-composition-patterns/SKILL.md"
+                "vercel-react-native-skills/SKILL.md"
+                "web-design-guidelines/SKILL.md"
+                "vercel-deploy/SKILL.md"
+                "next-best-practices/SKILL.md"
+                "next-cache-components/SKILL.md"
+                "next-upgrade/SKILL.md"
+                "cra-to-next-migration/SKILL.md"
+                "turborepo/SKILL.md"
+                "ai-sdk/SKILL.md"
+                "ai-elements/SKILL.md"
+                "streamdown/SKILL.md"
+                "building-components/SKILL.md"
+                "agent-browser/SKILL.md"
+                "vercel-cli/SKILL.md"
+                "autoship/SKILL.md"
+                "ucp/SKILL.md"
+                "workflow/SKILL.md"
+                "json-render-core/SKILL.md"
+                "json-render-react/SKILL.md"
+                "json-render-react-native/SKILL.md"
+                "json-render-remotion/SKILL.md"
+                "remotion-best-practices/SKILL.md"
+                "find-skills/SKILL.md"
+                "before-and-after/SKILL.md"
+            )
+
+            for skill_file in "${SKILLS[@]}"; do
+                dest="${FACTORY_DIR}/skills/${skill_file}"
+                mkdir -p "$(dirname "$dest")"
+                download_file "skills/${skill_file}" "$dest"
+            done
+            echo -e "  ${GREEN}✓${NC} Skills installed (official Vercel + context7-docs + xlsx-official)"
             ;;
         5) # BMAD Droids
             echo -e "${YELLOW}Installing BMAD Droids (17)...${NC}"

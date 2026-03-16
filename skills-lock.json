@@ -1,115 +1,245 @@
 {
-  "version": 1,
   "skills": {
+    "agent-browser": {
+      "computedHash": "7d187601dd3074d3dd5ad3fb6ea9e9daa8b0482d65c44c4f1f13a4cb74f20cbf",
+      "source": "vercel-labs/agent-browser",
+      "sourceType": "github"
+    },
+    "ai-elements": {
+      "computedHash": "8341212fd9f246c7e3c16e799ba628e9a5b4668c6f727733181a061085fae8ce",
+      "source": "vercel/ai-elements",
+      "sourceType": "github"
+    },
+    "ai-sdk": {
+      "computedHash": "2f1328a0e8f764c1b2043ed1c28e8387ba0c8fcfc08db7a733c302a6aaadab5f",
+      "source": "vercel/ai",
+      "sourceType": "github"
+    },
+    "autoship": {
+      "computedHash": "aefc12c87e7a663a2ee38e21d0127e720c5d0ff9efd96714cf1e30c134e51a83",
+      "source": "vercel-labs/autoship",
+      "sourceType": "github"
+    },
+    "before-and-after": {
+      "computedHash": "8213f8bfc98016bd81a2ff7b26194c3ab571c30d275645a77db49eab51f423b5",
+      "source": "vercel-labs/before-and-after",
+      "sourceType": "github"
+    },
+    "building-components": {
+      "computedHash": "10cccd7ccb2b80bb7554a921df9d51fdca072cdf528f13262d00d59af640b112",
+      "source": "vercel/components.build",
+      "sourceType": "github"
+    },
+    "cra-to-next-migration": {
+      "computedHash": "622bf1aca2c1e37f6252fb86b1c244f80b252247d31a3189f4135656db8145ea",
+      "source": "vercel-labs/migration-skills",
+      "sourceType": "github"
+    },
+    "find-skills": {
+      "computedHash": "07e4789da99eb16113714dc6acf18f04f554c0aba98cd3acfc59c6371205dc30",
+      "source": "vercel-labs/skills",
+      "sourceType": "github"
+    },
     "flutter-adding-home-screen-widgets": {
+      "computedHash": "63269a90f565bc2e4956be9fd4368caffe269c6cda7f543503994f1bf1d297a1",
       "source": "flutter/skills",
-      "sourceType": "github",
-      "computedHash": "63269a90f565bc2e4956be9fd4368caffe269c6cda7f543503994f1bf1d297a1"
+      "sourceType": "github"
     },
     "flutter-animating-apps": {
+      "computedHash": "fcec8d5e69f914e94ad8ac999b42793fd616af044665feb4af5daa21ca7988d7",
       "source": "flutter/skills",
-      "sourceType": "github",
-      "computedHash": "fcec8d5e69f914e94ad8ac999b42793fd616af044665feb4af5daa21ca7988d7"
+      "sourceType": "github"
     },
     "flutter-architecting-apps": {
+      "computedHash": "ac8212aa825c75d468c216ffada34302d0ab6e8ffc8e99d789848aba4acd30ed",
       "source": "flutter/skills",
-      "sourceType": "github",
-      "computedHash": "ac8212aa825c75d468c216ffada34302d0ab6e8ffc8e99d789848aba4acd30ed"
+      "sourceType": "github"
     },
     "flutter-building-forms": {
+      "computedHash": "4f1881cab15932c34fed9d7e4bc9f2d23364f2c9f64837306d145f0ab80d026b",
       "source": "flutter/skills",
-      "sourceType": "github",
-      "computedHash": "4f1881cab15932c34fed9d7e4bc9f2d23364f2c9f64837306d145f0ab80d026b"
+      "sourceType": "github"
     },
     "flutter-building-layouts": {
+      "computedHash": "f25c57e933fa78f5e26057be20b8a2edbd9783c654be03198a7cb6c5c2432d12",
       "source": "flutter/skills",
-      "sourceType": "github",
-      "computedHash": "f25c57e933fa78f5e26057be20b8a2edbd9783c654be03198a7cb6c5c2432d12"
+      "sourceType": "github"
     },
     "flutter-building-plugins": {
+      "computedHash": "19cd63fbf955c95cb4dbdbf801241deb680d6fd3ae247d425c683f8b9661b9eb",
       "source": "flutter/skills",
-      "sourceType": "github",
-      "computedHash": "19cd63fbf955c95cb4dbdbf801241deb680d6fd3ae247d425c683f8b9661b9eb"
+      "sourceType": "github"
     },
     "flutter-caching-data": {
+      "computedHash": "bc9d63c2000ea783643e36ec5f56151d93407ef3b8758a352e164b139a4d97c3",
       "source": "flutter/skills",
-      "sourceType": "github",
-      "computedHash": "bc9d63c2000ea783643e36ec5f56151d93407ef3b8758a352e164b139a4d97c3"
+      "sourceType": "github"
     },
     "flutter-embedding-native-views": {
+      "computedHash": "23a0ac274268916b43fc1af8f61caffb0e4a2517ac75621ba85feb86e262d07f",
       "source": "flutter/skills",
-      "sourceType": "github",
-      "computedHash": "23a0ac274268916b43fc1af8f61caffb0e4a2517ac75621ba85feb86e262d07f"
+      "sourceType": "github"
     },
     "flutter-handling-concurrency": {
+      "computedHash": "dbc91150d14278fea8ff17d530138ffe9de144be7fb2b9346f19d6434e921081",
       "source": "flutter/skills",
-      "sourceType": "github",
-      "computedHash": "dbc91150d14278fea8ff17d530138ffe9de144be7fb2b9346f19d6434e921081"
+      "sourceType": "github"
     },
     "flutter-handling-http-and-json": {
+      "computedHash": "8a2fd6a4594a2959fb60727b558f71856282bc480530ff298040be2d449e23e6",
       "source": "flutter/skills",
-      "sourceType": "github",
-      "computedHash": "8a2fd6a4594a2959fb60727b558f71856282bc480530ff298040be2d449e23e6"
+      "sourceType": "github"
     },
     "flutter-implementing-navigation-and-routing": {
+      "computedHash": "d599cf2bb7fe94d164fb3ce856dcd2701e66674e8f750b72c9c22c4af52fd57b",
       "source": "flutter/skills",
-      "sourceType": "github",
-      "computedHash": "d599cf2bb7fe94d164fb3ce856dcd2701e66674e8f750b72c9c22c4af52fd57b"
+      "sourceType": "github"
     },
     "flutter-improving-accessibility": {
+      "computedHash": "30eb673f24b23a9da2d688508fe9fb4d217a5093dd60488a6e3c9d6f0defd23a",
       "source": "flutter/skills",
-      "sourceType": "github",
-      "computedHash": "30eb673f24b23a9da2d688508fe9fb4d217a5093dd60488a6e3c9d6f0defd23a"
+      "sourceType": "github"
     },
     "flutter-interoperating-with-native-apis": {
+      "computedHash": "7d30a02f07a61f318ba61a457bcb31bbb1aeaf40a287fd63a6bf7e43646e92dc",
       "source": "flutter/skills",
-      "sourceType": "github",
-      "computedHash": "7d30a02f07a61f318ba61a457bcb31bbb1aeaf40a287fd63a6bf7e43646e92dc"
+      "sourceType": "github"
     },
     "flutter-localizing-apps": {
+      "computedHash": "624ad6e13012fda0f9e7f35a12b22d0c637b68b8924c064bd81f2f4428da31c9",
       "source": "flutter/skills",
-      "sourceType": "github",
-      "computedHash": "624ad6e13012fda0f9e7f35a12b22d0c637b68b8924c064bd81f2f4428da31c9"
+      "sourceType": "github"
     },
     "flutter-managing-state": {
+      "computedHash": "7a0f1741895403c42db43d66b535099ce1c0c06126765b1bd5d649f96b16d0bd",
       "source": "flutter/skills",
-      "sourceType": "github",
-      "computedHash": "7a0f1741895403c42db43d66b535099ce1c0c06126765b1bd5d649f96b16d0bd"
+      "sourceType": "github"
     },
     "flutter-reducing-app-size": {
+      "computedHash": "76c9c03c5a086de17bf1b3e41becd6695bdca42562ef351fa1de8d2bddd2b096",
       "source": "flutter/skills",
-      "sourceType": "github",
-      "computedHash": "76c9c03c5a086de17bf1b3e41becd6695bdca42562ef351fa1de8d2bddd2b096"
+      "sourceType": "github"
     },
     "flutter-setting-up-on-linux": {
+      "computedHash": "1adb716646b3800898bcf6a975b6dea77e5df8921269f488f87470b668ef269b",
       "source": "flutter/skills",
-      "sourceType": "github",
-      "computedHash": "1adb716646b3800898bcf6a975b6dea77e5df8921269f488f87470b668ef269b"
+      "sourceType": "github"
     },
     "flutter-setting-up-on-macos": {
+      "computedHash": "72e11b005d3182a5a47ed5147b37b19e07b7d06950cd1ff0fe31f3903e46db79",
       "source": "flutter/skills",
-      "sourceType": "github",
-      "computedHash": "72e11b005d3182a5a47ed5147b37b19e07b7d06950cd1ff0fe31f3903e46db79"
+      "sourceType": "github"
     },
     "flutter-setting-up-on-windows": {
+      "computedHash": "29fd83a27614f7345788bee6bb6c8675e87436b7be235fa1b26a8d7752666ee2",
       "source": "flutter/skills",
-      "sourceType": "github",
-      "computedHash": "29fd83a27614f7345788bee6bb6c8675e87436b7be235fa1b26a8d7752666ee2"
+      "sourceType": "github"
     },
     "flutter-testing-apps": {
+      "computedHash": "c3bc3a540534e97cf391710fb8dcdb49b9f4c8a5385597cb56ef9094e56af776",
       "source": "flutter/skills",
-      "sourceType": "github",
-      "computedHash": "c3bc3a540534e97cf391710fb8dcdb49b9f4c8a5385597cb56ef9094e56af776"
+      "sourceType": "github"
     },
     "flutter-theming-apps": {
+      "computedHash": "df83d4bcd1e98b684eff8fc6ed30c40f6165a377e9733f42a42e496da58bacd4",
       "source": "flutter/skills",
-      "sourceType": "github",
-      "computedHash": "df83d4bcd1e98b684eff8fc6ed30c40f6165a377e9733f42a42e496da58bacd4"
+      "sourceType": "github"
     },
     "flutter-working-with-databases": {
+      "computedHash": "202626bef016eb0b31aa6ef99d5ba2af8b0722d94a19d0a628a8dc627aa373cd",
       "source": "flutter/skills",
-      "sourceType": "github",
-      "computedHash": "202626bef016eb0b31aa6ef99d5ba2af8b0722d94a19d0a628a8dc627aa373cd"
+      "sourceType": "github"
+    },
+    "json-render-core": {
+      "computedHash": "c1d601bcab30cc7ded77a0236c2a2d476c7fdebc4001d7e1b0292c3279560465",
+      "source": "vercel-labs/json-render",
+      "sourceType": "github"
+    },
+    "json-render-react": {
+      "computedHash": "7d97a67094ed075f53e03b61cc5eb4a1721a2519d4378c305d17c3e6cf290d08",
+      "source": "vercel-labs/json-render",
+      "sourceType": "github"
+    },
+    "json-render-react-native": {
+      "computedHash": "14ff4e7c2ca3588faf9b9e3b3aa22e790c26ae2943b7f9a682be64c9170d5879",
+      "source": "vercel-labs/json-render",
+      "sourceType": "github"
+    },
+    "json-render-remotion": {
+      "computedHash": "5bf536b0b7db5ce48e1d740cdeece09ed465bff0a3cc2b994ffcc4c7b88fdda4",
+      "source": "vercel-labs/json-render",
+      "sourceType": "github"
+    },
+    "next-best-practices": {
+      "computedHash": "2e60306a312199feeb549ac1df20cb0c310ef94d1f799e1d57dd873750c04e64",
+      "source": "vercel-labs/next-skills",
+      "sourceType": "github"
+    },
+    "next-cache-components": {
+      "computedHash": "369860b573b2c824ec0ff71c20c5a76d69b1403348bcadccda052f47c652c0eb",
+      "source": "vercel-labs/next-skills",
+      "sourceType": "github"
+    },
+    "next-upgrade": {
+      "computedHash": "fe68781273ea2acf668775ba38ed12c6fd6f886bce8d155e00f1f64261d16df8",
+      "source": "vercel-labs/next-skills",
+      "sourceType": "github"
+    },
+    "remotion-best-practices": {
+      "computedHash": "52cf86fc107ab7242bd3279e32c57691057da84b2616172e2ec9cc543b08c38b",
+      "source": "vercel-labs/json-render",
+      "sourceType": "github"
+    },
+    "streamdown": {
+      "computedHash": "782765e7c5135ca5e06d0ec42cf766b3d4ab0d7e0dc6294a10d974b0b740e41d",
+      "source": "vercel/streamdown",
+      "sourceType": "github"
+    },
+    "turborepo": {
+      "computedHash": "69a5e66c2d367651c8341c9dc1aeb1704c6846ae117de7ca4e7bf7886be83515",
+      "source": "vercel/turborepo",
+      "sourceType": "github"
+    },
+    "ucp": {
+      "computedHash": "d74ffbaded2b625ad4e95507e181513edfb8d8afe6624a13eaca61a37851569b",
+      "source": "vercel-labs/agentic-commerce-skills",
+      "sourceType": "github"
+    },
+    "vercel-cli": {
+      "computedHash": "7a91bdbcaced5b55a9d2f79c1fb7fa82e14ab486d226cf36d93d1cc4cabdf077",
+      "source": "vercel/vercel",
+      "sourceType": "github"
+    },
+    "vercel-composition-patterns": {
+      "computedHash": "d1c56ad619db821431536867d8953ef04a20c76dad52b277013f21d142e365fb",
+      "source": "vercel-labs/agent-skills",
+      "sourceType": "github"
+    },
+    "vercel-deploy": {
+      "computedHash": "b19da877adb08af089760a526f56068b515c33d5b37512a1877a8b4d5ebc9245",
+      "source": "vercel-labs/agent-skills",
+      "sourceType": "github"
+    },
+    "vercel-react-best-practices": {
+      "computedHash": "d97c28aa74898f8a2f1477af1039e52ed98d1c450048bcc3044de9509ffefe72",
+      "source": "vercel-labs/agent-skills",
+      "sourceType": "github"
+    },
+    "vercel-react-native-skills": {
+      "computedHash": "66300ab97ee4966159c4b4c199c82761768c8cce7a282fefaf4f66643baf145c",
+      "source": "vercel-labs/agent-skills",
+      "sourceType": "github"
+    },
+    "web-design-guidelines": {
+      "computedHash": "338ff2e28279826e6136c8ba4ab40ae15a3bc037b46f1f4d5dc0b8ea2655120c",
+      "source": "vercel-labs/agent-skills",
+      "sourceType": "github"
+    },
+    "workflow": {
+      "computedHash": "f2e4d288a38e6b95725cab76739e8d8f6b067fb5a905d8d00d0ca5cc6b653068",
+      "source": "vercel/workflow",
+      "sourceType": "github"
     }
-  }
+  },
+  "version": 1
 }

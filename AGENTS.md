@@ -306,19 +306,33 @@ When user asks to compare architectures or services:
 
 ### Skills Recomendados
 
-| Skill | npm install | Uso |
-|-------|-------------|-----|
-| **vercel-labs/agent-skills** | `npx skills add vercel-labs/agent-skills` | React/Next.js optimization, web design review, Vercel deployments |
-| **react-best-practices** | `npx skills add vercel-labs/react-best-practices` | Performance optimization para React/Next.js |
-| **web-design-guidelines** | `npx skills add vercel-labs/web-design-guidelines` | UI/UX review |
-| **ai-sdk-core** | Skills para AI SDK v6, MCP tools, RAG | |
+**Skills oficiales de Vercel (Skills.sh):**
+
+- **vercel-labs/agent-skills**: vercel-react-best-practices, vercel-composition-patterns, vercel-react-native-skills, web-design-guidelines, vercel-deploy
+- **vercel-labs/next-skills**: next-best-practices, next-cache-components, next-upgrade
+- **vercel-labs/migration-skills**: cra-to-next-migration
+- **vercel/turborepo**: turborepo
+- **vercel/ai**: ai-sdk
+- **vercel/ai-elements**: ai-elements
+- **vercel/streamdown**: streamdown
+- **vercel/components.build**: building-components
+- **vercel-labs/agent-browser**: agent-browser
+- **vercel/vercel**: vercel-cli
+- **vercel-labs/autoship**: autoship
+- **vercel-labs/agentic-commerce-skills**: ucp
+- **vercel/workflow**: workflow
+- **vercel-labs/json-render**: json-render-core, json-render-react, json-render-react-native, json-render-remotion, remotion-best-practices
+- **vercel-labs/skills**: find-skills
+- **vercel-labs/before-and-after**: before-and-after
 
 ### Cuándo Usar Skills
 
-- **React/Next.js optimization** → Usar `react-best-practices` skill
-- **UI/UX review** → Usar `web-design-guidelines` skill
-- **Vercel deployments** → Usar agent-skills de Vercel
-- **Explorar más skills** → Visitar https://skills.sh
+- **React/Next.js** → Usa `vercel-react-best-practices`, `next-best-practices` o `next-cache-components`
+- **Migraciones** → Usa `cra-to-next-migration`
+- **Deploy y tooling** → Usa `vercel-deploy`, `vercel-cli`, `turborepo`
+- **UI/UX** → Usa `web-design-guidelines` o `building-components`
+- **IA** → Usa `ai-sdk`, `ai-elements` o `streamdown`
+- **Descubrir skills** → Usa `find-skills`
 
 ---
 

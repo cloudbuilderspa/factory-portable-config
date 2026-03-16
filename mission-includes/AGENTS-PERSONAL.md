@@ -71,6 +71,32 @@ Execute after completing meaningful work:
 |-------|-------------|
 | `context7-docs` | Fetching library documentation |
 | `xlsx-official` | Excel/spreadsheet work |
+| `vercel-react-best-practices` | React best practices (Vercel) |
+| `vercel-composition-patterns` | Composition patterns for UI | 
+| `vercel-react-native-skills` | React Native guidance |
+| `web-design-guidelines` | UI/UX review |
+| `vercel-deploy` | Vercel deployment workflows |
+| `next-best-practices` | Next.js best practices |
+| `next-cache-components` | Next.js caching and component patterns |
+| `next-upgrade` | Next.js upgrade guidance |
+| `cra-to-next-migration` | CRA to Next.js migrations |
+| `turborepo` | Monorepo workflows |
+| `ai-sdk` | Vercel AI SDK usage |
+| `ai-elements` | AI UI elements |
+| `streamdown` | Streaming markdown/MDX |
+| `building-components` | Component design guidance |
+| `agent-browser` | Browser automation |
+| `vercel-cli` | Vercel CLI usage |
+| `autoship` | Release automation |
+| `ucp` | Agentic commerce workflows |
+| `workflow` | Workflow orchestration |
+| `json-render-core` | JSON Render core patterns |
+| `json-render-react` | JSON Render for React |
+| `json-render-react-native` | JSON Render for React Native |
+| `json-render-remotion` | JSON Render for Remotion |
+| `remotion-best-practices` | Remotion best practices |
+| `find-skills` | Discover skills from Skills.sh |
+| `before-and-after` | Before/after comparisons |
 
 ---
 
