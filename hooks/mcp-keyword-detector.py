@@ -123,6 +123,11 @@ MCP_KEYWORDS = {
         "keywords": [r"\bdrawio\b", r"\bdiagram\b", r"\barchitecture\s*diagram\b", r"\bflowchart\b"],
         "instruction": "Use drawio-mcp___* tools for creating and editing diagrams."
     },
+    # Flutter
+    "flutter": {
+        "keywords": [r"\bflutter\b", r"\bdart\b", r"\bflutter\s*sdk\b", r"\bflutter\s*app\b"],
+        "instruction": "Use flutter/skills (e.g., flutter-testing-apps, flutter-managing-state, flutter-routing-and-navigation) based on the task before responding."
+    },
     
     # Droid TTS - Text to Speech
     "droid-tts": {
