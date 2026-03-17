@@ -135,6 +135,12 @@ MCP_KEYWORDS = {
                      r"\btext\s*to\s*speech\b", r"\baudio\b"],
         "instruction": "Use the droid-speak.sh script to make Droid speak. Execute: /Users/asuresky/.factory/hooks/droid-speak.sh \"message\""
     },
+    
+    # Git Release Flow
+    "git-release": {
+        "keywords": [r"\brelease\b", r"\bpublish\b", r"\bship\s*it\b", r"\bdeploy\s*version\b", r"\bcreate\s*release\b"],
+        "instruction": "Use git-release-flow skill for automated release workflow with GitHub integration."
+    },
 }
 
 def detect_aws_keywords(prompt: str) -> tuple[bool, bool]:

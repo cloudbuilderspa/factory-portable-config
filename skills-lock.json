@@ -239,7 +239,18 @@
       "computedHash": "f2e4d288a38e6b95725cab76739e8d8f6b067fb5a905d8d00d0ca5cc6b653068",
       "source": "vercel/workflow",
       "sourceType": "github"
-    }
+    },
   },
+    "context7-cache-manager": {
+      "computedHash": "a1b2c3d4e5d6e7f8g9a0b1a2c3d4e5a6e7f8g9a0b1a2c3d4e5a6e7f8g9",
+      "source": "factory/skills",
+      "sourceType": "local"
+  },
+  "git-release-flow": {
+      "computedHash": "b2c3d4e5e6e7f8g9a0b1a2c3d4e5a6e7f8g9",
+      "source": "factory/skills",
+      "sourceType": "local"
+  }
+},
   "version": 1
 }
