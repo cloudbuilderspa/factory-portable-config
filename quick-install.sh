@@ -24,11 +24,53 @@ RAW_URL="https://raw.githubusercontent.com/cloudbuilderspa/factory-portable-conf
 FACTORY_DIR="${HOME}/.factory"
 BACKUP_DIR="${HOME}/.factory-backup-$(date +%Y%m%d_%H%M%S)"
 
+# Minimum Node.js version required for edge-tts-universal
+MIN_NODE_MAJOR=18
+
 echo -e "${BLUE}"
 echo "╔════════════════════════════════════════════════════════════╗"
 echo "║     Factory Droid Portable Config - Quick Installer        ║"
 echo "╚════════════════════════════════════════════════════════════╝"
 echo -e "${NC}"
+
+# Error handling function
+die() {
+    echo -e "${RED}❌ ERROR: $1${NC}" >&2
+    exit 1
+}
+
+# Check for required tools (VAL-INSTALL-001)
+check_required_tools() {
+    local missing_tools=()
+    
+    if ! command -v curl &> /dev/null; then
+        missing_tools+=("curl")
+    fi
+    
+    if ! command -v git &> /dev/null; then
+        missing_tools+=("git")
+    fi
+    
+    if [[ ${#missing_tools[@]} -gt 0 ]]; then
+        echo -e "${RED}❌ Missing required tools: ${missing_tools[*]}${NC}" >&2
+        echo -e "${YELLOW}Please install the missing tools and try again:${NC}" >&2
+        for tool in "${missing_tools[@]}"; do
+            case "$tool" in
+                curl)
+                    echo "  • curl: apt-get install curl (Linux) or brew install curl (macOS)" >&2
+                    ;;
+                git)
+                    echo "  • git: apt-get install git (Linux) or brew install git (macOS)" >&2
+                    ;;
+            esac
+        done
+        exit 1
+    fi
+    
+    echo -e "${GREEN}✓${NC} Required tools found (curl, git)"
+}
+
+check_required_tools
 
 # Detect OS
 detect_os() {
@@ -58,13 +100,25 @@ echo -e "${YELLOW}Installing dependencies...${NC}"
 if ! command -v node &> /dev/null; then
     echo -e "${YELLOW}Installing Node.js...${NC}"
     if [[ "$OS" == "macos" ]]; then
-        brew install node
+        brew install node || die "Failed to install Node.js via Homebrew"
     elif [[ "$OS" == "linux" ]]; then
-        curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
-        sudo apt-get install -y nodejs
+        curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash - || die "Failed to add NodeSource repository"
+        sudo apt-get install -y nodejs || die "Failed to install Node.js via apt"
     fi
 fi
-echo -e "${GREEN}✓${NC} Node.js: $(node --version)"
+
+# Check Node.js version (edge-tts-universal requires 18+) - VAL-INSTALL-002
+NODE_VERSION=$(node --version 2>/dev/null | sed 's/v//')
+NODE_MAJOR=$(echo "$NODE_VERSION" | cut -d. -f1)
+if [[ -z "$NODE_MAJOR" ]] || [[ "$NODE_MAJOR" -lt "$MIN_NODE_MAJOR" ]]; then
+    echo -e "${RED}❌ Node.js version $NODE_VERSION is too old. Version ${MIN_NODE_MAJOR}+ is required for edge-tts-universal.${NC}" >&2
+    echo -e "${YELLOW}Please upgrade Node.js:${NC}" >&2
+    echo "  • Using nvm: nvm install --lts && nvm use --lts" >&2
+    echo "  • macOS: brew upgrade node" >&2
+    echo "  • Linux: curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash - && sudo apt-get install -y nodejs" >&2
+    exit 1
+fi
+echo -e "${GREEN}✓${NC} Node.js: $(node --version) (meets minimum requirement v${MIN_NODE_MAJOR})"
 
 # ffmpeg
 if ! command -v ffmpeg &> /dev/null; then
@@ -138,8 +192,18 @@ echo ""
 echo -e "${YELLOW}Installing TTS engine (edge-tts-universal)...${NC}"
 cd "${FACTORY_DIR}"
 if [[ ! -d "node_modules/edge-tts-universal" ]]; then
-    npm init -y 2>/dev/null || true
-    npm install edge-tts-universal --save 2>/dev/null
+    # Initialize npm if package.json doesn't exist - VAL-INSTALL-003
+    if [[ ! -f "package.json" ]]; then
+        echo -e "  ${BLUE}→${NC} Initializing npm package..."
+        if ! npm init -y 2>/dev/null; then
+            die "npm init failed. Check npm permissions and try again."
+        fi
+    fi
+    # Install edge-tts-universal - VAL-INSTALL-003
+    echo -e "  ${BLUE}→${NC} Installing edge-tts-universal..."
+    if ! npm install edge-tts-universal --save 2>&1; then
+        die "npm install edge-tts-universal failed. Check network connection and npm permissions."
+    fi
 fi
 echo -e "${GREEN}✓${NC} edge-tts-universal installed"
 
@@ -150,8 +214,17 @@ echo -e "${YELLOW}Downloading configuration files...${NC}"
 download_file() {
     local path="$1"
     local dest="$2"
+    local url="${RAW_URL}/${path}"
+    
     echo -e "  ${BLUE}↓${NC} $path"
-    curl -fsSL "${RAW_URL}/${path}" -o "${dest}"
+    if ! curl -fsSL "$url" -o "${dest}" 2>/dev/null; then
+        echo -e "${RED}❌ Failed to download: $path${NC}" >&2
+        echo -e "${YELLOW}   URL: $url${NC}" >&2
+        echo -e "${YELLOW}   This may be a network issue or the file may not exist in the repository.${NC}" >&2
+        # Don't exit on download failure for optional files, just warn
+        return 1
+    fi
+    return 0
 }
 
 # Download all files
