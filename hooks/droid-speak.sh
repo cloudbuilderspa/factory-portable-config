@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# File: /Users/asuresky/.factory/hooks/droid-speak.sh
+# File: ~/.factory/hooks/droid-speak.sh
 #
 # Droid TTS Voice Integration for Factory
 # Maps scenarios to voices and triggers TTS
@@ -14,7 +14,10 @@ set -euo pipefail
 
 # Get script directory
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-CONFIG_FILE="/Users/asuresky/.factory/config/droid-voice-scenarios.json"
+
+# Portable config path - use FACTORY_DIR env var or fall back to relative path from script
+FACTORY_ROOT="${FACTORY_DIR:-$(dirname "$SCRIPT_DIR")}"
+CONFIG_FILE="$FACTORY_ROOT/config/droid-voice-scenarios.json"
 
 # Default voice (Chile - Catalina)
 DEFAULT_VOICE="es-CL-CatalinaNeural"
@@ -32,37 +35,60 @@ if [[ -z "$DIALOGUE" ]]; then
     exit 0
 fi
 
-# Auto-detect scenario from environment or context
+# Auto-detect scenario from dialogue text using keywords
 detect_scenario() {
-    local context="${LAST_TASK:-${CONTEXT:-}}"
+    local text
+    text=$(echo "$DIALOGUE" | tr '[:upper:]' '[:lower:]')  # Convert to lowercase for matching
     
-    # Check config file for keywords
-    if [[ -f "$CONFIG_FILE" ]]; then
-        for scenario in software_development cloud_aws architecture_ia claude_code droid_factory kubernetes debug research; do
-            if grep -q "\"$scenario\"" "$CONFIG_FILE" 2>/dev/null; then
-                case "$scenario" in
-                    software_development)
-                        echo "software_development" ;;
-                    cloud_aws)
-                        echo "cloud_aws" ;;
-                    architecture_ia)
-                        echo "architecture_ia" ;;
-                    claude_code)
-                        echo "claude_code" ;;
-                    droid_factory)
-                        echo "droid_factory" ;;
-                    kubernetes)
-                        echo "kubernetes" ;;
-                    debug)
-                        echo "debug" ;;
-                    research)
-                        echo "research" ;;
-                esac
-                return
-            fi
-        done
+    # Software development keywords
+    if [[ "$text" =~ (create|edit|refactor|implement|build|write|update|delete|desarroll|código|code) ]]; then
+        echo "software_development"
+        return
     fi
     
+    # AWS/Cloud keywords
+    if [[ "$text" =~ (aws|lambda|s3|ec2|dynamodb|serverless|deploy|cloudformation|cdk|cloud|infraestructura|infrastructure) ]]; then
+        echo "cloud_aws"
+        return
+    fi
+    
+    # AI/Architecture keywords
+    if [[ "$text" =~ (agent|prompt|workflow|ai|llm|model|chain|rag|vector|arquitectura|architecture|inteligencia) ]]; then
+        echo "architecture_ia"
+        return
+    fi
+    
+    # Claude Code keywords
+    if [[ "$text" =~ (claude|command|hook|rule|mcp|settings|config|configuración) ]]; then
+        echo "claude_code"
+        return
+    fi
+    
+    # Droid/Factory keywords
+    if [[ "$text" =~ (droid|factory|session|skill|sesión) ]]; then
+        echo "droid_factory"
+        return
+    fi
+    
+    # Kubernetes keywords
+    if [[ "$text" =~ (kubernetes|k8s|docker|container|pod|deployment|service|helm|namespace|contenedor) ]]; then
+        echo "kubernetes"
+        return
+    fi
+    
+    # Debug keywords
+    if [[ "$text" =~ (fix|bug|error|debug|issue|problem|failed|crash|corregí|arreglé|solucioné) ]]; then
+        echo "debug"
+        return
+    fi
+    
+    # Research keywords
+    if [[ "$text" =~ (search|find|research|investigate|look|explore|analyze|review|encontré|investigué|busqué) ]]; then
+        echo "research"
+        return
+    fi
+    
+    # Default
     echo "default"
 }
 
@@ -111,4 +137,13 @@ VOICE=$(get_voice "$SCENARIO")
 
 # Speak using tts-speak (non-blocking with &)
 echo "🤖 Droid [$SCENARIO]: $DIALOGUE"
+
+# Check TTS binary exists
+if [[ ! -x "$SCRIPT_DIR/../bin/tts-speak" ]]; then
+    echo "⚠️  TTS binary not found or not executable: $SCRIPT_DIR/../bin/tts-speak" >&2
+    exit 1
+fi
+
+# Run TTS in background (non-blocking for user experience)
 "$SCRIPT_DIR/../bin/tts-speak" "$DIALOGUE" -v "$VOICE" &
+disown 2>/dev/null || true

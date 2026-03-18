@@ -465,8 +465,13 @@ echo -e "${YELLOW}Testing TTS...${NC}"
 if [[ "$DRY_RUN" == "true" ]]; then
     dry_run_echo "Would test TTS with: 'Instalación completada exitosamente'"
 else
-    "${FACTORY_DIR}/hooks/droid-speak.sh" "Instalación completada exitosamente" &
-    sleep 1
+    # Run TTS and validate success
+    TTS_TEST_MSG="Instalación completada exitosamente"
+    if "${FACTORY_DIR}/hooks/droid-speak.sh" "$TTS_TEST_MSG" 2>&1 | grep -q "Droid"; then
+        echo -e "${GREEN}✅ TTS test passed${NC}"
+    else
+        echo -e "${RED}❌ TTS test failed. Check that edge-tts-universal is installed.${NC}"
+    fi
 fi
 
 # Summary
