@@ -216,6 +216,9 @@ download_file() {
     local dest="$2"
     local url="${RAW_URL}/${path}"
     
+    # Create parent directory if it doesn't exist (handles missing directories)
+    mkdir -p "$(dirname "$dest")"
+    
     echo -e "  ${BLUE}↓${NC} $path"
     if ! curl -fsSL "$url" -o "${dest}" 2>/dev/null; then
         echo -e "${RED}❌ Failed to download: $path${NC}" >&2
