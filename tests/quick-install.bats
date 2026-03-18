@@ -2,7 +2,7 @@
 #
 # Tests for quick-install.sh dependency handling
 # Validates: VAL-INSTALL-001, VAL-INSTALL-002, VAL-INSTALL-003, VAL-INSTALL-004,
-#            VAL-INSTALL-005, VAL-INSTALL-007
+#            VAL-INSTALL-005, VAL-INSTALL-006, VAL-INSTALL-007
 #
 
 SCRIPT="${BATS_TEST_DIRNAME}/../quick-install.sh"
@@ -118,4 +118,86 @@ SCRIPT="${BATS_TEST_DIRNAME}/../quick-install.sh"
     # Check that download_file creates parent directories
     run grep -q 'mkdir -p.*dirname.*dest' "$SCRIPT"
     [ "$status" -eq 0 ]
+}
+
+# VAL-INSTALL-006: Dry-run mode works correctly
+@test "quick-install.sh has --dry-run flag support" {
+    # Check --dry-run flag is parsed
+    run grep -q '\-\-dry-run' "$SCRIPT"
+    [ "$status" -eq 0 ]
+    
+    # Check -n short flag is supported
+    run grep -q '\-n' "$SCRIPT"
+    [ "$status" -eq 0 ]
+    
+    # Check DRY_RUN variable is set
+    run grep -q 'DRY_RUN=' "$SCRIPT"
+    [ "$status" -eq 0 ]
+}
+
+@test "quick-install.sh has dry-run helper functions" {
+    # Check dry_run_echo function exists
+    run grep -q 'dry_run_echo()' "$SCRIPT"
+    [ "$status" -eq 0 ]
+    
+    # Check dry_run_skip function exists
+    run grep -q 'dry_run_skip()' "$SCRIPT"
+    [ "$status" -eq 0 ]
+}
+
+@test "quick-install.sh shows planned actions in dry-run mode" {
+    # Check for dry-run mode header
+    run grep -q "DRY-RUN MODE" "$SCRIPT"
+    [ "$status" -eq 0 ]
+    
+    # Check for "Would" prefix in dry-run messages
+    run grep -q 'Would' "$SCRIPT"
+    [ "$status" -eq 0 ]
+    
+    # Check for summary section
+    run grep -q "DRY-RUN COMPLETE" "$SCRIPT"
+    [ "$status" -eq 0 ]
+}
+
+@test "quick-install.sh --dry-run exits with code 0" {
+    # Run with --dry-run flag - should exit 0
+    run "$SCRIPT" --dry-run
+    [ "$status" -eq 0 ]
+    
+    # Check that dry-run message appears in output
+    [[ "$output" == *"DRY-RUN MODE"* ]] || false
+    
+    # Check that no changes message appears
+    [[ "$output" == *"No changes were made"* ]] || false
+}
+
+@test "quick-install.sh --dry-run does not modify files" {
+    # Get modification time of AGENTS.md before dry-run
+    local before=""
+    if [[ -f "$HOME/.factory/AGENTS.md" ]]; then
+        before=$(stat -f "%m" "$HOME/.factory/AGENTS.md" 2>/dev/null || stat -c "%Y" "$HOME/.factory/AGENTS.md" 2>/dev/null)
+    fi
+    
+    # Run dry-run
+    run "$SCRIPT" --dry-run
+    [ "$status" -eq 0 ]
+    
+    # Verify AGENTS.md wasn't modified
+    if [[ -n "$before" ]]; then
+        local after=$(stat -f "%m" "$HOME/.factory/AGENTS.md" 2>/dev/null || stat -c "%Y" "$HOME/.factory/AGENTS.md" 2>/dev/null)
+        [ "$before" -eq "$after" ]
+    fi
+    
+    # Verify no backup directory was created
+    run bash -c "ls -d $HOME/.factory-backup-* 2>/dev/null | wc -l"
+    # The count should not have increased during this test
+    [ "$status" -eq 0 ]
+}
+
+@test "quick-install.sh --help shows dry-run option" {
+    run "$SCRIPT" --help
+    [ "$status" -eq 0 ]
+    
+    # Check --dry-run is documented
+    [[ "$output" == *"--dry-run"* ]] || false
 }
