@@ -1,0 +1,7 @@
+commands:
+  install: bash install.sh
+  test: bash test.sh
+  typecheck: bash -n quick-install.sh && bash -n quick-install-interactive.sh
+  lint: shellcheck quick-install.sh quick-install-interactive.sh install.sh sync-to-repo.sh
+
+services: {}

@@ -5,6 +5,7 @@ Detects keywords in user prompts and injects MCP tool usage instructions.
 Separates AWS Services/Architecture from AWS Pricing.
 """
 import json
+import os
 import re
 import sys
 
@@ -212,6 +213,12 @@ def main():
 
     # Detect keywords
     detected_mcps = detect_mcp_keywords(prompt)
+    debug = os.getenv("MCP_DETECTOR_DEBUG", "").lower() in {"1", "true", "yes"}
+    if debug:
+        print(
+            f"[MCP DEBUG] prompt={prompt!r} detected={[item['mcp'] for item in detected_mcps]}",
+            file=sys.stderr,
+        )
 
     if detected_mcps:
         # Build context injection
