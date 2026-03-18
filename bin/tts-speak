@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 
-import { UniversalEdgeTTS } from 'edge-tts-universal';
 import { writeFile, unlink } from 'fs/promises';
 import { tmpdir } from 'os';
 import { join } from 'path';
@@ -8,17 +7,57 @@ import { spawn } from 'child_process';
 
 const args = process.argv.slice(2);
 
-if (args.length === 0) {
+// Show usage if no args or --help/-h flag
+if (args.length === 0 || args.includes('--help') || args.includes('-h')) {
   console.log('Usage: tts-speak "Text to speak"');
   console.log('Options:');
   console.log('  -v, --voice <voice>  Voice to use (default: en-US-EmmaMultilingualNeural)');
   console.log('  -l, --list           List available voices');
+  console.log('  -h, --help           Show this help message');
   process.exit(0);
+}
+
+// Check for ffplay availability
+async function checkFfplay() {
+  return new Promise((resolve) => {
+    const check = spawn('which', ['ffplay'], { shell: false });
+    check.on('close', (code) => {
+      if (code !== 0) {
+        console.error('Error: ffplay (from ffmpeg) is required but not found.');
+        console.error('Please install ffmpeg: brew install ffmpeg (macOS) or apt install ffmpeg (Linux)');
+        resolve(false);
+      } else {
+        resolve(true);
+      }
+    });
+    check.on('error', () => {
+      console.error('Error: ffplay (from ffmpeg) is required but not found.');
+      console.error('Please install ffmpeg: brew install ffmpeg (macOS) or apt install ffmpeg (Linux)');
+      resolve(false);
+    });
+  });
+}
+
+// Check for edge-tts-universal availability
+async function checkEdgeTTS() {
+  try {
+    await import('edge-tts-universal');
+    return true;
+  } catch (e) {
+    console.error('Error: edge-tts-universal package is required but not found.');
+    console.error('Please install it with: npm install edge-tts-universal');
+    return false;
+  }
 }
 
 const listVoices = args.includes('-l') || args.includes('--list');
 
 if (listVoices) {
+  // Check dependencies before listing voices
+  if (!await checkEdgeTTS()) {
+    process.exit(1);
+  }
+  
   const { listVoicesUniversal } = await import('edge-tts-universal');
   const voices = await listVoicesUniversal();
   console.log('Available voices:');
@@ -40,6 +79,16 @@ for (let i = 1; i < args.length; i++) {
 }
 
 async function speak(text, voice) {
+  // Check dependencies before speaking
+  if (!await checkFfplay()) {
+    process.exit(1);
+  }
+  if (!await checkEdgeTTS()) {
+    process.exit(1);
+  }
+  
+  const { UniversalEdgeTTS } = await import('edge-tts-universal');
+  
   console.log(`Speaking: "${text}" with voice: ${voice}`);
   
   const tts = new UniversalEdgeTTS(text, voice);
